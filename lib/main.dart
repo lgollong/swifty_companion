@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'pages/home_page.dart';
 import 'utils/theme_manager.dart';
-void main() => runApp(const MyApp());
+import 'config/env.dart';
+import 'services/oauth_service.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Env.load();
+  OAuthService.instance.init();
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

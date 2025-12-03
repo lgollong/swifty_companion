@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'profil_page.dart';
+import '../services/api_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,6 +11,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final TextEditingController _username = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -51,14 +57,15 @@ class _HomePageState extends State<HomePage> {
                               final name = _username.text.trim();
                               if (name.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Please enter an username')),
+                                  const SnackBar(
+                                      content:
+                                          Text('Please enter an username')),
                                 );
                                 return;
                               }
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                    builder: (_) =>
-                                        ProfilPage(username: name)),
+                                    builder: (_) => ProfilPage(username: name)),
                               );
                             },
                           ),
