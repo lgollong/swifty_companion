@@ -10,7 +10,7 @@ class ThemeManager {
   static ThemeData getTheme() {
     return ThemeData(
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: black,
+      scaffoldBackgroundColor: Colors.black,
       primaryColor: blue,
       colorScheme: ColorScheme.fromSeed(
         brightness: Brightness.dark,

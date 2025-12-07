@@ -21,9 +21,9 @@ class OAuthService {
       _client,
       clientId: Env.uid,
       clientSecret: Env.secret,
-      grantType: OAuth2Helper.authorizationCode,
+      grantType: OAuth2Helper.clientCredentials,
       scopes: ['public'],
-      enablePKCE: true,
+      enablePKCE: false,
     );
   }
 

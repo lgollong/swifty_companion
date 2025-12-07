@@ -1,13 +1,17 @@
+import 'package:json_path/json_path.dart';
+
 class UserModel {
-  final String username;
-  final double level;
+  final String login;
+  final String fullName;
+  final num level;
   final String location;
   final int evalPoints;
   final String email;
   final String profilImage;
 
   const UserModel({
-    required this.username,
+    required this.login,
+    required this.fullName,
     required this.level,
     required this.location,
     required this.evalPoints,
@@ -15,23 +19,41 @@ class UserModel {
     required this.profilImage,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        username: json['first_name'] as String? ?? '',
-        level: (json['level'] is num)
-            ? (json['level'] as num).toDouble()
-            : double.tryParse(json['level']?.toString() ?? '') ?? 0.3,
-        location: json['location'] as String? ?? '',
-        evalPoints: (json['eval_points'] is int)
-            ? json['eval_points'] as int
-            : int.tryParse(json['eval_points']?.toString() ?? '') ?? 0,
-        email: json['email'] as String? ?? '',
-        profilImage: json['kind'] as String? ??
-            json['kind'] as String? ??
-            '',
-      );
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    dynamic read(String path) {
+      final matches = JsonPath(path).read(json).map((m) => m.value);
+      return matches.isEmpty ? null : matches.first;
+    }
+    final login = (read(r'$.login') ?? '').toString();
+    final fullName = (read(r'$.usual_full_name') ?? '').toString();
+    final levelRaw = read(r'$.cursus_users[1].level');
+    final double level = levelRaw is num
+        ? levelRaw.toDouble()
+        : double.tryParse(levelRaw?.toString() ?? '') ?? 0.0;
+    final location = (read(r'$.campus[0].city') ?? '').toString();
+    final evalRaw = read(r'$.correction_point') ?? 0;
+    final int evalPoints = evalRaw is int
+        ? evalRaw
+        : evalRaw is num
+            ? evalRaw.toInt()
+            : int.tryParse(evalRaw?.toString() ?? '') ?? 0;
+    final email = (read(r'$.email') ?? '').toString();
+    final profilImage = (read(r'$.image.link') ?? '').toString();
+
+    return UserModel(
+      login: login,
+      fullName: fullName,
+      level: level,
+      location: location,
+      evalPoints: evalPoints,
+      email: email,
+      profilImage: profilImage,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
-        'username': username,
+        'login': login,
+        'full_name': fullName,
         'level': level,
         'location': location,
         'eval_points': evalPoints,

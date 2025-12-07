@@ -23,6 +23,8 @@ dependencies:
   percent_indicator: ^4.2.5
   pull_to_refresh: ^2.0.0
   intl: ^0.20.2
+  json_path: ^0.8.0
+  fl_chart: ^0.60.0
 
 dev_dependencies:
   flutter_test:
@@ -34,3 +36,4 @@ flutter:
   uses-material-design: true
   assets:
     - .env
+    - ./assets/42_logo.png

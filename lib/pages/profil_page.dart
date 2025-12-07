@@ -1,18 +1,35 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
-import '../models/user_model.dart';
-import '../config/env.dart';
+// import '../models/user_model.dart';
+// import '../models/skill_model.dart';
+// import '../models/project_model.dart';
+import '../components/profil.dart';
+import '../components/projects.dart';
+import '../components/skills.dart';
 
-class ProfilPage extends StatelessWidget {
+class ProfilPage extends StatefulWidget {
   final String username;
   const ProfilPage({super.key, required this.username});
 
   @override
+  State<ProfilPage> createState() => _ProfilPageState();
+}
+
+class _ProfilPageState extends State<ProfilPage> {
+  late Future<UserData?> _userData;
+
+  @override
+  void initState() {
+    super.initState();
+    _userData = ApiService.instance.getUser(widget.username);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(username)),
-      body: FutureBuilder<UserModel?>(
-        future: ApiService.instance.getUser(username),
+      appBar: AppBar(title: Text(widget.username)),
+      body: FutureBuilder<UserData?>(
+        future: _userData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -21,34 +38,21 @@ class ProfilPage extends StatelessWidget {
             return Center(child: Text('Fehler: ${snapshot.error}'));
           }
           if (!snapshot.hasData || snapshot.data == null) {
-            return Center(child: Text(Env.baseUrl));
+            return const Center(child: Text('Daten nicht gefunden'));
           }
-          final user = snapshot.data!;
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircleAvatar(
-                    radius: 48,
-                    backgroundImage: user.profilImage.isNotEmpty
-                        ? NetworkImage(user.profilImage)
-                        : null,
-                    child: user.profilImage.isEmpty
-                        ? const Icon(Icons.person, size: 48)
-                        : null,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(user.username,
-                      style: Theme.of(context).textTheme.titleLarge),
-                  const SizedBox(height: 8),
-                  Text('Level: ${user.level}'),
-                  Text('Location: ${user.location}'),
-                  Text('Eval Points: ${user.evalPoints}'),
-                  Text('Email: ${user.email}'),
-                ],
-              ),
+
+          final data = snapshot.data!;
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ProfilComponent(user: data.user),
+                const SizedBox(height: 16),
+                SkillsComponent(skills: data.skills),
+                const SizedBox(height: 16),
+                ProjectsComponent(projects: data.project),
+              ],
             ),
           );
         },
