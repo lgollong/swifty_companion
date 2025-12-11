@@ -21,6 +21,8 @@ class ThemeManager {
         onPrimary: white,
         onSecondary: white,
         onSurface: white,
+        tertiary: green,
+        onTertiary: white,
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.black,
@@ -37,9 +39,7 @@ class ThemeManager {
         style: ElevatedButton.styleFrom(
           backgroundColor: blue,
           foregroundColor: white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -60,9 +60,7 @@ class ThemeManager {
         backgroundColor: turquoise,
         foregroundColor: white,
       ),
-      progressIndicatorTheme: ProgressIndicatorThemeData(
-        color: green,
-      ),
+      progressIndicatorTheme: ProgressIndicatorThemeData(color: green),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(foregroundColor: green),
       ),

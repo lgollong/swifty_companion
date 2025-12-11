@@ -65,13 +65,15 @@ class _HomePageState extends State<HomePage> {
                     if (name.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content: Text('Please enter an username')),
+                          content: Text('Please enter an username'),
+                        ),
                       );
                       return;
                     }
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                          builder: (_) => ProfilPage(username: name)),
+                        builder: (_) => ProfilPage(username: name),
+                      ),
                     );
                   },
                   child: const Text('Search'),

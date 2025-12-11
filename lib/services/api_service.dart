@@ -1,4 +1,5 @@
 import 'dart:convert';
+// import 'dart:io';
 import 'package:http/http.dart' as http;
 import '../config/env.dart';
 import 'oauth_service.dart';
@@ -13,12 +14,20 @@ class ApiService {
     final String baseUrl = Env.baseUrl;
     if (token == null) return null;
     final url = Uri.parse('$baseUrl/users/$login');
-    final response = await http.get(url, headers: {
-      'Authorization': 'Bearer $token',
-    });
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body) as Map<String, dynamic>;
       final user = UserModel.fromJson(data);
+      // try {
+      //   final file = File('/Users/elgollong/VScode/swifty_companion/lib/services/user.json');
+      //   final jsonString = const JsonEncoder.withIndent('  ').convert(data);
+      //   await file.writeAsString(jsonString);
+      // } catch (e) {
+      //   print('Error writing user.json: $e');
+      // }
       return user;
     } else {
       print('Error while getting User: ${response.statusCode}');

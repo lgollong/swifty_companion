@@ -33,6 +33,7 @@ class Cursus {
           final matches = JsonPath(path).read(nodeMap).map((m) => m.value);
           return matches.isEmpty ? null : matches.first;
         }
+
         final idRaw = read(r'$.cursus_id') ?? 0;
         final int cursusId = idRaw is int
             ? idRaw

@@ -3,12 +3,12 @@ import 'package:json_path/json_path.dart';
 class ProjectModel {
   final String name;
   final int mark;
-  final String status;
+  final bool status;
 
-  const ProjectModel(
-      {required this.name,
-      required this.mark,
-      required this.status,
+  const ProjectModel({
+    required this.name,
+    required this.mark,
+    required this.status,
   });
 
   factory ProjectModel.fromJson(Map<String, dynamic> json) {
@@ -22,12 +22,21 @@ class ProjectModel {
     final mark = markRaw is num
         ? markRaw.toInt()
         : int.tryParse(markRaw?.toString() ?? '') ?? 0;
-    final status = (read(r'$.status') ?? '').toString();
-    return ProjectModel(
-        name: name, mark: mark, status: status);
+    final statusRaw = read(r"$['validated?']");
+    final status = statusRaw == null
+        ? false
+        : statusRaw is bool
+        ? statusRaw
+        : statusRaw is num
+        ? statusRaw != 0
+        : statusRaw.toString().toLowerCase() == 'true';
+    return ProjectModel(name: name, mark: mark, status: status);
   }
 
-  static List<ProjectModel> listFromJson(Map<String, dynamic> json, int cursusId) {
+  static List<ProjectModel> listFromJson(
+    Map<String, dynamic> json,
+    int cursusId,
+  ) {
     final path = JsonPath(r'$.projects_users[*]');
     final projectNodes = path.read(json).map((m) => m.value).toList();
     final List<ProjectModel> projects = [];
@@ -53,8 +62,8 @@ class ProjectModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'mark': mark,
-        'status': status,
-      };
+    'name': name,
+    'mark': mark,
+    'status': status,
+  };
 }
