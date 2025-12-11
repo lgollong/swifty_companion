@@ -22,7 +22,7 @@ class ApiService {
   ApiService._internal();
   static final ApiService instance = ApiService._internal();
 
-  Future<UserData?> getUser(String login) async {
+  Future<UserModel?> getUser(String login) async {
     final token = await OAuthService.instance.getAccessToken();
     final String baseUrl = Env.baseUrl;
     if (token == null) return null;
@@ -33,9 +33,7 @@ class ApiService {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body) as Map<String, dynamic>;
       final user = UserModel.fromJson(data);
-      final skills = SkillModel.listFromJson(data);
-      final project = ProjectModel.listFromJson(data);
-      return UserData(user: user, skills: skills, project: project);
+      return user;
     } else {
       print('Error while getting User: ${response.statusCode}');
       return null;

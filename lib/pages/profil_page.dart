@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
-// import '../models/user_model.dart';
+import '../models/user_model.dart';
 // import '../models/skill_model.dart';
 // import '../models/project_model.dart';
 import '../components/profil.dart';
@@ -16,7 +16,9 @@ class ProfilPage extends StatefulWidget {
 }
 
 class _ProfilPageState extends State<ProfilPage> {
-  late Future<UserData?> _userData;
+  late Future<UserModel?> _userData;
+  late int index = 1;
+  late String cursusName = '';
 
   @override
   void initState() {
@@ -28,7 +30,7 @@ class _ProfilPageState extends State<ProfilPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.username)),
-      body: FutureBuilder<UserData?>(
+      body: FutureBuilder<UserModel?>(
         future: _userData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -42,16 +44,34 @@ class _ProfilPageState extends State<ProfilPage> {
           }
 
           final data = snapshot.data!;
+
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                ProfilComponent(user: data.user),
+                DropdownButtonHideUnderline(
+                  child: DropdownButton<int>(
+                    value: index,
+                    items: [
+                      DropdownMenuItem(value: 0, child: Text('C Piscine')),
+                      DropdownMenuItem(value: 1, child: Text('42 Cursus')),
+                      DropdownMenuItem(value: 2, child: Text('Basecamp Warm Up Germany')),
+                      DropdownMenuItem(value: 3, child: Text('Basecamp Germany')),
+                    ],
+                    onChanged: (int? value) {
+                      if (value == null) return;
+                      setState(() {
+                        index = value;
+                      });
+                    },
+                  ),
+                ),
+                ProfilComponent(user: data),
                 const SizedBox(height: 16),
-                SkillsComponent(skills: data.skills),
+                SkillsComponent(skills: data.cursus[index].skills),
                 const SizedBox(height: 16),
-                ProjectsComponent(projects: data.project),
+                ProjectsComponent(projects: data.cursus[index].projects),
               ],
             ),
           );

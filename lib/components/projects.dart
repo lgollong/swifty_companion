@@ -1,10 +1,24 @@
 import 'package:flutter/material.dart';
+// import '../models/user_model.dart';
 import '../models/project_model.dart';
 
 class ProjectsComponent extends StatelessWidget {
+  // final int cursusId;
+  // final UserModel? user;
   final List<ProjectModel> projects;
 
-  const ProjectsComponent({super.key, required this.projects});
+  const ProjectsComponent({super.key, required this.projects/*, required this.user, required this.cursusId*/});
+
+  // List<ProjectModel> get projects {
+  //   if (user == null) return [];
+  //   final cursusList = user!.cursus;
+  //   for (final cursus in cursusList) {
+  //     if (cursus.cursusId == cursusId) {
+  //       return cursus.projects;
+  //     }
+  //   }
+  //   return [];
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +33,11 @@ class ProjectsComponent extends StatelessWidget {
       itemBuilder: (context, index) {
         final project = projects[index];
         final markText = project.mark.toString();
-        if (project.cursusId == 21){
-          return ListTile(
-            title: Text(project.name),
-            subtitle: Text('Status: ${project.status}'),
-            trailing: Text(markText),
-          );
-        }
-        return const SizedBox.shrink();
+        return ListTile(
+          title: Text(project.name),
+          subtitle: Text('Status: ${project.status}'),
+          trailing: Text(markText),
+        );
       },
     );
   }

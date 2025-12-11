@@ -1,10 +1,24 @@
 import 'package:flutter/material.dart';
+// import '../models/user_model.dart';
 import '../models/skill_model.dart';
 
 class SkillsComponent extends StatelessWidget {
+  // final int cursusId;
+  // final UserModel? user;
   final List<SkillModel> skills;
 
-  const SkillsComponent({super.key, required this.skills});
+  const SkillsComponent({super.key, required this.skills/*, required this.user, required this.cursusId*/});
+
+  //   List<SkillModel> get skills {
+  //   if (user == null) return [];
+  //   final cursusList = user!.cursus;
+  //   for (final cursus in cursusList) {
+  //     if (cursus.cursusId == cursusId) {
+  //       return cursus.skills;
+  //     }
+  //   }
+  //   return [];
+  // }
 
   @override
   Widget build(BuildContext context) {

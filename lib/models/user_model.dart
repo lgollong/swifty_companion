@@ -1,22 +1,23 @@
 import 'package:json_path/json_path.dart';
+import 'cursus_model.dart';
 
 class UserModel {
   final String login;
   final String fullName;
-  final num level;
   final String location;
   final int evalPoints;
   final String email;
   final String profilImage;
+  final List<Cursus> cursus;
 
   const UserModel({
     required this.login,
     required this.fullName,
-    required this.level,
     required this.location,
     required this.evalPoints,
     required this.email,
     required this.profilImage,
+    required this.cursus,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -24,40 +25,37 @@ class UserModel {
       final matches = JsonPath(path).read(json).map((m) => m.value);
       return matches.isEmpty ? null : matches.first;
     }
+
     final login = (read(r'$.login') ?? '').toString();
     final fullName = (read(r'$.usual_full_name') ?? '').toString();
-    final levelRaw = read(r'$.cursus_users[1].level');
-    final double level = levelRaw is num
-        ? levelRaw.toDouble()
-        : double.tryParse(levelRaw?.toString() ?? '') ?? 0.0;
     final location = (read(r'$.campus[0].city') ?? '').toString();
     final evalRaw = read(r'$.correction_point') ?? 0;
     final int evalPoints = evalRaw is int
         ? evalRaw
         : evalRaw is num
-            ? evalRaw.toInt()
-            : int.tryParse(evalRaw?.toString() ?? '') ?? 0;
+        ? evalRaw.toInt()
+        : int.tryParse(evalRaw?.toString() ?? '') ?? 0;
     final email = (read(r'$.email') ?? '').toString();
     final profilImage = (read(r'$.image.link') ?? '').toString();
-
+    final cursus = Cursus.listCursus(json);
     return UserModel(
       login: login,
       fullName: fullName,
-      level: level,
       location: location,
       evalPoints: evalPoints,
       email: email,
       profilImage: profilImage,
+      cursus: cursus,
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'login': login,
-        'full_name': fullName,
-        'level': level,
-        'location': location,
-        'eval_points': evalPoints,
-        'email': email,
-        'profil_image': profilImage,
-      };
+    'login': login,
+    'full_name': fullName,
+    'location': location,
+    'eval_points': evalPoints,
+    'email': email,
+    'profil_image': profilImage,
+    'cursus': cursus,
+  };
 }

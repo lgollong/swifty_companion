@@ -9,7 +9,7 @@ class ProfilComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final profilImage = user?.profilImage;
-    final level = user?.level;
+    // final level = user?.level;
     final evalPoints = user?.evalPoints;
 
     return Column(
@@ -25,7 +25,7 @@ class ProfilComponent extends StatelessWidget {
           ),
         Text('Login: ${user?.login ?? '-'}'),
         Text('Full Name: ${user?.fullName ?? '-'}'),
-        Text('Level: ${level?.toString() ?? '-'}'),
+        // Text('Level: ${level?.toString() ?? '-'}'),
         Text('Location: ${user?.location ?? '-'}'),
         Text('Eval Points: ${evalPoints?.toString() ?? '-'}'),
         Text('E-Mail: ${user?.email ?? '-'}'),
