@@ -3,20 +3,6 @@ import 'package:http/http.dart' as http;
 import '../config/env.dart';
 import 'oauth_service.dart';
 import '../models/user_model.dart';
-import '../models/skill_model.dart';
-import '../models/project_model.dart';
-
-class UserData {
-  final UserModel user;
-  final List<SkillModel> skills;
-  final List<ProjectModel> project;
-
-  UserData({
-    required this.user,
-    required this.skills,
-    required this.project,
-  });
-}
 
 class ApiService {
   ApiService._internal();
