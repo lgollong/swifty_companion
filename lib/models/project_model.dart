@@ -2,13 +2,15 @@ import 'package:json_path/json_path.dart';
 
 class ProjectModel {
   final String name;
-  final int mark;
+  final int? mark;
   final bool status;
+  final int occurrence;
 
   const ProjectModel({
     required this.name,
     required this.mark,
     required this.status,
+    required this.occurrence,
   });
 
   factory ProjectModel.fromJson(Map<String, dynamic> json) {
@@ -18,10 +20,10 @@ class ProjectModel {
     }
 
     final name = (read(r'$.project.name') ?? '').toString();
+
     final markRaw = read(r'$.final_mark');
-    final mark = markRaw is num
-        ? markRaw.toInt()
-        : int.tryParse(markRaw?.toString() ?? '') ?? 0;
+    final int? mark = markRaw is num ? markRaw.toInt() : null;
+
     final statusRaw = read(r"$['validated?']");
     final status = statusRaw == null
         ? false
@@ -30,7 +32,16 @@ class ProjectModel {
         : statusRaw is num
         ? statusRaw != 0
         : statusRaw.toString().toLowerCase() == 'true';
-    return ProjectModel(name: name, mark: mark, status: status);
+    final occurrenceRaw = read(r'$.occurrence');
+    final occurrence = occurrenceRaw is num
+        ? occurrenceRaw.toInt()
+        : int.tryParse(occurrenceRaw?.toString() ?? '') ?? 0;
+    return ProjectModel(
+      name: name,
+      mark: mark,
+      status: status,
+      occurrence: occurrence,
+    );
   }
 
   static List<ProjectModel> listFromJson(
@@ -65,5 +76,6 @@ class ProjectModel {
     'name': name,
     'mark': mark,
     'status': status,
+    'occurrence': occurrence,
   };
 }

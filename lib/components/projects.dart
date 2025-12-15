@@ -42,6 +42,8 @@ class ProjectsComponent extends StatelessWidget {
                 separatorBuilder: (_, _) => const Divider(),
                 itemBuilder: (context, i) {
                   final project = projects[i];
+                  final bool isPending =
+                      project.occurrence == 0 && project.mark == null;
                   final markText = project.mark.toString();
                   final statusColor = project.status
                       ? Theme.of(context).colorScheme.tertiary
@@ -50,12 +52,13 @@ class ProjectsComponent extends StatelessWidget {
                       ? Icons.check_circle
                       : Icons.cancel;
 
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Row(
-                      children: [
-                        Expanded(child: Text(project.name)),
-                        Row(
+                  final Widget trailing = isPending
+                      ? Icon(
+                          Icons.loop,
+                          color: Theme.of(context).colorScheme.secondary,
+                          size: 20,
+                        )
+                      : Row(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -70,7 +73,14 @@ class ProjectsComponent extends StatelessWidget {
                             const SizedBox(width: 6),
                             Icon(statusIcon, color: statusColor, size: 20),
                           ],
-                        ),
+                        );
+
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Row(
+                      children: [
+                        Expanded(child: Text(project.name)),
+                        trailing,
                       ],
                     ),
                   );

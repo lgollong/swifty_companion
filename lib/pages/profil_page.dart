@@ -107,7 +107,9 @@ class _ProfilPageState extends State<ProfilPage> {
                   ),
                   ProfilComponent(user: data, index: selectedIndex),
                   const SizedBox(height: 16),
-                  ProjectsComponent(projects: data.cursus[selectedIndex].projects),
+                  ProjectsComponent(
+                    projects: data.cursus[selectedIndex].projects,
+                  ),
                   const SizedBox(height: 16),
                   SkillsComponent(skills: data.cursus[selectedIndex].skills),
                 ],
