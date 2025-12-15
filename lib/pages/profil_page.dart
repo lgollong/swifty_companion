@@ -15,8 +15,8 @@ class ProfilPage extends StatefulWidget {
 
 class _ProfilPageState extends State<ProfilPage> {
   late Future<UserModel?> _userData;
-  late int index = 1;
-  late String cursusName = '';
+  int index = 0;
+  bool _initialised = false;
 
   @override
   void initState() {
@@ -36,13 +36,46 @@ class _ProfilPageState extends State<ProfilPage> {
               return const Center(child: CircularProgressIndicator());
             }
             if (snapshot.hasError) {
-              return Center(child: Text('Fehler: ${snapshot.error}'));
+              return Center(child: Text('Error: ${snapshot.error}'));
             }
             if (!snapshot.hasData || snapshot.data == null) {
-              return const Center(child: Text('Daten nicht gefunden'));
+              return const Center(child: Text('No data found'));
             }
 
             final data = snapshot.data!;
+            if (!_initialised && data.cursus.isNotEmpty) {
+              final pos = data.cursus.indexWhere((c) {
+                final name = c.name.toLowerCase();
+                return name.contains('42cursus');
+              });
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (!mounted) return;
+                setState(() {
+                  if (pos != -1) index = pos;
+                  _initialised = true;
+                });
+              });
+            }
+
+            if (data.cursus.isEmpty) {
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    ProfilComponent(user: data, index: 0),
+                    const SizedBox(height: 16),
+                    const Center(child: Text('No cursus available')),
+                  ],
+                ),
+              );
+            }
+            if (index >= data.cursus.length) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) setState(() => index = 0);
+              });
+            }
+            final selectedIndex = index.clamp(0, data.cursus.length - 1);
 
             return SingleChildScrollView(
               padding: const EdgeInsets.all(16),
@@ -51,19 +84,19 @@ class _ProfilPageState extends State<ProfilPage> {
                 children: [
                   DropdownButtonHideUnderline(
                     child: DropdownButton<int>(
-                      value: index,
-                      items: [
-                        DropdownMenuItem(value: 0, child: Text('C Piscine')),
-                        DropdownMenuItem(value: 1, child: Text('42 Cursus')),
-                        DropdownMenuItem(
-                          value: 2,
-                          child: Text('Basecamp Warm Up Germany'),
+                      value: selectedIndex,
+                      iconEnabledColor: Theme.of(context).colorScheme.secondary,
+                      dropdownColor: Theme.of(context).colorScheme.secondary,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSecondary,
+                      ),
+                      items: List.generate(
+                        data.cursus.length,
+                        (i) => DropdownMenuItem(
+                          value: i,
+                          child: Text(data.cursus[i].name),
                         ),
-                        DropdownMenuItem(
-                          value: 3,
-                          child: Text('Basecamp Germany'),
-                        ),
-                      ],
+                      ),
                       onChanged: (int? value) {
                         if (value == null) return;
                         setState(() {
@@ -72,11 +105,11 @@ class _ProfilPageState extends State<ProfilPage> {
                       },
                     ),
                   ),
-                  ProfilComponent(user: data, index: index),
+                  ProfilComponent(user: data, index: selectedIndex),
                   const SizedBox(height: 16),
-                  ProjectsComponent(projects: data.cursus[index].projects),
+                  ProjectsComponent(projects: data.cursus[selectedIndex].projects),
                   const SizedBox(height: 16),
-                  SkillsComponent(skills: data.cursus[index].skills),
+                  SkillsComponent(skills: data.cursus[selectedIndex].skills),
                 ],
               ),
             );
