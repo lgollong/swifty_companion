@@ -11,7 +11,7 @@ class ProfilComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final profilImage = user?.profilImage;
-    final level = user?.cursus[index].level;
+    final level = index == -1 ? null : user?.cursus[index].level;
     final evalPoints = user?.evalPoints;
 
     return SafeArea(
@@ -31,8 +31,18 @@ class ProfilComponent extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: profilImage != null ? NetworkImage(profilImage) : null,
-                    child: profilImage == null ? const Icon(Icons.person, size: 30) : null,
+                    child: profilImage != null
+                        ? ClipOval(
+                            child: Image.network(
+                              profilImage,
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(Icons.person, size: 30),
+                            ),
+                          )
+                        : const Icon(Icons.person, size: 30),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -151,15 +161,16 @@ class ProfilComponent extends StatelessWidget {
               ),
             ),
           ),
-          LevelBar(
-            level: level!.toInt(),
-            percentage: (((level - level.floor()) * 100).clamp(
-              0.0,
-              100.0,
-            )).round(),
-            color: Theme.of(context).colorScheme.tertiary,
-            height: 48,
-          ),
+          if (level != null)
+            LevelBar(
+              level: level.toInt(),
+              percentage: (((level - level.floor()) * 100).clamp(
+                0.0,
+                100.0,
+              )).round(),
+              color: Theme.of(context).colorScheme.tertiary,
+              height: 48,
+            ),
         ],
       ),
     );

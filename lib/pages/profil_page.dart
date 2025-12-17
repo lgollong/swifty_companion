@@ -63,7 +63,7 @@ class _ProfilPageState extends State<ProfilPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    ProfilComponent(user: data, index: 0),
+                    ProfilComponent(user: data, index: -1),
                     const SizedBox(height: 16),
                     const Center(child: Text('No cursus available')),
                   ],
