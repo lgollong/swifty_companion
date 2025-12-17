@@ -85,6 +85,7 @@ class _ProfilPageState extends State<ProfilPage> {
                   DropdownButtonHideUnderline(
                     child: DropdownButton<int>(
                       value: selectedIndex,
+                      isExpanded: true,
                       iconEnabledColor: Theme.of(context).colorScheme.secondary,
                       dropdownColor: Theme.of(context).colorScheme.secondary,
                       style: TextStyle(

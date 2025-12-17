@@ -31,9 +31,8 @@ class ProfilComponent extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: profilImage != null
-                        ? NetworkImage(profilImage)
-                        : null,
+                    backgroundImage: profilImage != null ? NetworkImage(profilImage) : null,
+                    child: profilImage == null ? const Icon(Icons.person, size: 30) : null,
                   ),
                   const SizedBox(width: 12),
                   Expanded(

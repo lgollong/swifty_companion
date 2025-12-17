@@ -7,7 +7,7 @@ class UserModel {
   final String location;
   final int evalPoints;
   final String email;
-  final String profilImage;
+  final String? profilImage;
   final List<Cursus> cursus;
 
   const UserModel({
@@ -33,10 +33,11 @@ class UserModel {
     final int evalPoints = evalRaw is int
         ? evalRaw
         : evalRaw is num
-        ? evalRaw.toInt()
-        : int.tryParse(evalRaw?.toString() ?? '') ?? 0;
+            ? evalRaw.toInt()
+            : int.tryParse(evalRaw?.toString() ?? '') ?? 0;
     final email = (read(r'$.email') ?? '').toString();
-    final profilImage = (read(r'$.image.link') ?? '').toString();
+    final profilValue = read(r'$.image.link');
+    final String? profilImage = profilValue?.toString();
     final cursus = Cursus.listCursus(json);
     return UserModel(
       login: login,
@@ -50,12 +51,12 @@ class UserModel {
   }
 
   Map<String, dynamic> toJson() => {
-    'login': login,
-    'full_name': fullName,
-    'location': location,
-    'eval_points': evalPoints,
-    'email': email,
-    'profil_image': profilImage,
-    'cursus': cursus,
-  };
+        'login': login,
+        'full_name': fullName,
+        'location': location,
+        'eval_points': evalPoints,
+        'email': email,
+        'profil_image': profilImage,
+        'cursus': cursus,
+      };
 }
